@@ -86,8 +86,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: downcase REPO
+        run: |
+          echo "REPO=${GITHUB_REPOSITORY@L}" >> "${GITHUB_ENV}"
+
       - name: Pull the image from GitHub Container Registry
-        run: docker pull ghcr.io/${{ github.repository }}:${{ github.sha }}
+        run: docker pull ghcr.io/${{ REPO }}:${{ github.sha }}
 
       - name: Run the Image
-        run: docker run --rm ghcr.io/${{ github.repository }}:${{ github.sha }} | grep -i hello || exit 1
+        run: docker run --rm ghcr.io/${{ REPO }}:${{ github.sha }} | grep -i hello || exit 1
